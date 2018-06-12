@@ -6,6 +6,7 @@
 		</div>
 		<div class="instructions">
 			<p>1、请将网关连接电源。</p><p>2、用网线把路由器的LAN口和网关的LAN口相连。</p>
+			<input type="text" :value="curName" ref="router" style="visibility:hidden;"/>
 			<!-- 3、扫描网关底部贴有的二维码。 -->
 		</div>
 		<div class="footer">
@@ -17,6 +18,7 @@
 
 <script>
 	import publicHead from '../common/publicHeader'
+	import { mapState, mapMutations, mapGetters } from 'vuex'
 	export default {
 		data(){
 			return {
@@ -28,23 +30,41 @@
 			}
 		},
 		computed: {
+			...mapState(['houseManagerList']),
+			curName(){
+				return '/index/'+this.$store.state.houseManagerList.name;
+			},
 			curOpacity(){
 				return this.isAgree ? 1 : .5;
-			}
+			},
+			
 		},
 		components: {
 			publicHead
 		},
 		methods: {
+			...mapMutations(['initHouseList','getDevices']),
+			// ...mapMutations(['modifyStatus', 'toLogin']),
+			// goto(){
+			// 	let _this = this;
+			// 	let username = _this.$refs.username.value;
+			// 	let password = _this.$refs.password.value;
+			// 	_this.toLogin({user: username, password: password});
+			// }
 			toggle(){
 				this.isAgree = !this.isAgree;
 			},
 			add(){
 				if(this.isAgree){
 					// this.$router.push('addEquip')
-					this.$router.push('/')
+					let _this = this;
+					let macAddress = '10.108.218.120';
+					_this.getDevices({mac: macAddress});
 				}
 			}
+		},
+        created(){
+			this.initHouseList();
 		}
 	}
 </script>

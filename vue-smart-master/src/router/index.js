@@ -45,7 +45,7 @@ const Addfamily = r => require.ensure([], () => r(require('@/components/user/myf
 const Share = r => require.ensure([], () => r(require('@/components/user/share/shareList')), 'User')
 const ShareTo = r => require.ensure([], () => r(require('@/components/user/share/sharekinds/shareTo')), 'User')
 const AgreeShare = r => require.ensure([], () => r(require('@/components/user/share/sharekinds/agreeShare')), 'User')
-//const Addshare = r => require.ensure([], () => r(require('@/components/user/share/addshare')), 'User')
+const Addshare = r => require.ensure([], () => r(require('@/components/user/share/addShare')), 'User')
 
 const Recommend = r => require.ensure([], () => r(require('@/components/user/recommend/recommend')), 'User')
 const Rule = r => require.ensure([], () => r(require('@/components/user/recommend/recommendRule')), 'User')
@@ -112,7 +112,8 @@ export default new Router({
 					]
 				},
 		    ]
-		}, {
+		},
+		 {
 			path: '/management',
 			name: 'Management',
 			component: Management
@@ -188,7 +189,8 @@ export default new Router({
 			name: 'choiceHouse',
 			component: choiceHouse
 		}, {
-			path: '/houseManage/:name',
+			// path: '/houseManage/:name',
+			path: '/houseManage',
 			name: 'houseManage',
 			component: houseManage
 		}, {
@@ -221,11 +223,11 @@ export default new Router({
 				}
 			]
 		}
-		// , {
-		// 	path: '/addshare',
-		// 	name: 'Addshare',
-		// 	component: Addshare
-		// }
+		, {
+			path: '/addshare',
+			name: 'Addshare',
+			component: Addshare
+		}
 		, {
 			path: '/recommend',
 			name: 'Recommend',

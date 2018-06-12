@@ -5,11 +5,11 @@
                 <span>16</span>℃
             </div>
             <div class="city">
-                <p>北京市.海淀区</p>
-                <p>多云<span></span>室外湿度 30%<span></span>室外PM 100</p>
+                <p>北京市.海淀区  多云</p>
+                <p>室外湿度 30%<span></span>室外PM 100</p>
             </div>
         </div>
-        <div class="temperature flex">
+        <div class="temperature flex" v-if="user">
             <div>室内温度 24℃</div>
             <span></span>
             <div>室内湿度 60%</div>
@@ -20,12 +20,17 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 	export default {
 		data(){
 			return {
 				
 			}
-		}
+        },
+        computed: {
+            // ...mapState(['user','eqUl', 'nodata'])
+            ...mapState(['user', 'nodata'])
+        },
 	}
 </script>
 

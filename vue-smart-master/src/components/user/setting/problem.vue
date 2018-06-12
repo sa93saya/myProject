@@ -20,27 +20,27 @@
 				msg: '常见问题',
 				securityList: [
 					{
-						title: '1. 智能乐居APP如何添加新设备?',
+						title: '1. 如何添加家庭网关?',
 						url: '/problemDetail/0'
 					},
 					{
-						title: '2. 什么是场景模式?',
+						title: '2. 什么是情境模式?',
 						url: '/problemDetail/1'
 					},
 					{
 						title: '3. 什么是设备联动?',
 						url: '/problemDetail/2'
 					},
+					// {
+					// 	title: '4. 什么是设备安防?',
+					// 	url: '/problemDetail/3'
+					// },
 					{
-						title: '4. 什么是设备安防?',
-						url: '/problemDetail/3'
-					},
-					{
-						title: '5. 设备离线怎么办?',
+						title: '4. 设备离线怎么办?',
 						url: '/problemDetail/4'
 					},
 					{
-						title: '6. 怎样共享设备?',
+						title: '5. 怎样共享设备?',
 						url: '/problemDetail/5'
 					}
 				]

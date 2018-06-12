@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     state: {
         user: true,
         nodata: false,
+        data:false,
         socketObj: null, //当前设备的类
         cookieVals: {},
         devices: [],
@@ -40,30 +41,31 @@ const store = new Vuex.Store({
         successNum: '',
         countPoint: '',
         recommendIntegrals: [],
-        houseManagerList: [],
+        // houseManagerList: [],
+        houseManagerList: {},
         username: '',
         familyNum: '',
         addressInfo: {'addressName':"加载中...",'area':"",'city':"",'createDate':"加载中...",'id':"加载中...",'isDefault':"加载中...",'jsonUpdateFlag':"加载中...",'memberId':"加载中...",'modifyDate':"加载中...",'mybatisRecordCount':'加载中...','orderNo':"加载中...",'phone':"加载中...",'province':"",'userName':"加载中..."},
         addressListInfo: []
     },
     mutations: {
-        initUser() { //初始化会员中心
-            let _this = this;
-            _this.commit('GetCookie', { cvalue: "id" });
-            _this.commit('GetCookie', { cvalue: 'eqLength' });
-            _this.state.eqLen = _this.state.cookieVals.eqLength;
-            let params = {
-                'id': _this.state.cookieVals.id,
-            }
-            let curParams = Qs.stringify(params);
-            axios.post('/zzjj-app/member/findById.do', curParams).then(response => {
-                if (response.data.isSuccess == 0) {
-                    _this.state.username = response.data.entity.nickname;
-                }
-            }).catch(error => {
-                alert("服务器返回数据错误");
-            })
-        },
+        // initUser() { //初始化会员中心
+        //     let _this = this;
+        //     _this.commit('GetCookie', { cvalue: "id" });
+        //     _this.commit('GetCookie', { cvalue: 'eqLength' });
+        //     _this.state.eqLen = _this.state.cookieVals.eqLength;
+        //     let params = {
+        //         'id': _this.state.cookieVals.id,
+        //     }
+        //     let curParams = Qs.stringify(params);
+        //     axios.post('/zzjj-app/member/findById.do', curParams).then(response => {
+        //         if (response.data.isSuccess == 0) {
+        //             _this.state.username = response.data.entity.nickname;
+        //         }
+        //     }).catch(error => {
+        //         alert("服务器返回数据错误");
+        //     })
+        // },
         isLogin() { //获取登录状态
             this.commit('GetCookie', { cvalue: 'userStatus' });
             if (this.state.cookieVals.userStatus) {
@@ -71,6 +73,52 @@ const store = new Vuex.Store({
             } else {
                 this.state.user = false;
             }
+        },
+        isgetDevices() { //获取登录状态
+            this.commit('GetCookie', { cvalue: 'account' });
+            if (this.state.cookieVals.account) {
+                this.state.data = true;
+            } else {
+                this.state.data = false;
+            }
+        },
+        getDevices(obj, data) { //连接网关
+            let _this = this;
+            let params = {
+                'mac': data.mac
+            }
+            let curParams = Qs.stringify(params);
+            axios.post('/zs-app/getDevices.do', curParams).then(response => {
+                if (response.data.sign == 0) {
+                    _this.commit('SetCookie', { cname: "account", cvalue: params.mac, exdays: 1 });
+                    _this.commit('signInTip', { msg: response.data.msg, status: 1 });
+                    // _this.state.devices = response.data.map((item) => {
+                    //     return {
+                    //         device_id: item.id.toString(),
+                    //         device_name: item.name,
+                    //         device_mac: item.mac,
+                    //         device_pid: item.product_id
+                    //     }
+                    // });
+                    // if (response.data.length) {
+                    //     alert(true)
+                    //     _this.state.data = true;
+                    // } 
+                    // else {
+                        // _this.commit('SetCookie', { cname: "hostId", cvalue: response.data[0].id, exdays: 1 });
+                        // _this.commit('initSdk');
+                    // }
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1000)
+                } else {
+                     _this.commit('signInTip', { msg: response.data.msg, status: 0 });
+                    return;
+                }
+            }).catch(error => {
+                alert("服务器返回数据错误");
+                return;
+            })
         },
         toLogin(obj, data) { //登录
             let _this = this;
@@ -87,6 +135,7 @@ const store = new Vuex.Store({
             axios.post('/zs-app/login/passwordlogin.do', curParams).then(response => {
                 if (response.data.sign == 0) {
                     _this.commit('SetCookie', { cname: "userStatus", cvalue: 1, exdays: 1 });
+                    _this.commit('SetCookie', { cname: "telephone", cvalue: params.phone, exdays: 1 });
                     _this.commit('signInTip', { msg: response.data.msg, status: 1 });
                     setTimeout(() => {
                         window.location.href = "/user";
@@ -95,6 +144,7 @@ const store = new Vuex.Store({
                      _this.commit('signInTip', { msg: response.data.msg, status: 0 });
                     return;
                 }
+                console.log(document.cookie);
             }).catch(error => {
                 alert("服务器返回数据错误");
                 return;
@@ -112,6 +162,7 @@ const store = new Vuex.Store({
             this.commit('SetCookie', { cname: "authorize", cvalue: '', exdays: 1 });
             this.commit('SetCookie', { cname: "userStatus", cvalue: '', exdays: 1 });
             window.location.href = "/";
+            console.log(document.cookie);
         },
         getVerification(obj, data) { //登录获取验证码
             let _this = this;
@@ -252,16 +303,27 @@ const store = new Vuex.Store({
             })
         },
         submitFix(obj, data) { //提交修改
+            var ca = document.cookie.split(';'); 
+            var phone; 
+            for(var i=0; i<ca.length; i++) {  
+                var c = ca[i];  
+                while (c.charAt(0)==' ') c = c.substring(1);
+                if (c.indexOf('telephone') != -1) {
+                    phone = c.split('=')[1];
+                    break;
+                } 
+            }
+            console.log(phone);
             let _this = this;
             var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
-            if (!reg.test(data.number) || !data.number) {
-                _this.commit('signInTip', { msg: '请输入正确手机号', status: 0 });
-                return false;
-            }
-            if (!data.codes) {
-                _this.commit('signInTip', { msg: '请输入验证码', status: 0 });
-                return false;
-            }
+            // if (!reg.test(data.number) || !data.number) {
+            //     _this.commit('signInTip', { msg: '请输入正确手机号', status: 0 });
+            //     return false;
+            // }
+            // if (!data.codes) {
+            //     _this.commit('signInTip', { msg: '请输入验证码', status: 0 });
+            //     return false;
+            // }
             if (!data.psw) {
                 _this.commit('signInTip', { msg: '请输入密码', status: 0 });
                 return false;
@@ -279,13 +341,13 @@ const store = new Vuex.Store({
                 return false;
             }
             let params = {
-                'phone': data.number,
+                'phone': phone,
                 'code': data.codes,
                 'password': data.psw
             }
             let curParams = Qs.stringify(params);
-            axios.post('/zzjj-app/login/updatePassword.do', curParams).then(response => {
-                if (response.data.isSuccess == 0) {
+            axios.post('/zs-app/login/updatePassword.do', curParams).then(response => {
+                if (response.data.sign == 0) {
                     _this.commit('signInTip', { msg: '修改密码成功', status: 1 });
                     setTimeout(() => {
                         window.location.href = "/login";
@@ -398,48 +460,52 @@ const store = new Vuex.Store({
                 this.state.goodsList.push(item);
             })
         },
-        getIntegral() { //获取当前积分
-            let _this = this;
-            this.commit('GetCookie', { cvalue: 'id' });
-            let params = {
-                'memberId': _this.state.cookieVals.id
-            }
-            let curParams = Qs.stringify(params);
-            axios.post('/zzjj-app/memberintegrallog/findTwoIntegralLog.do', curParams).then(response => {
-                console.log('可用积分', response);
-                if (response.status == 200) {
-                    _this.state.allIntegral = response.data.countPoint;
-                    storage.setStorage('allIntegral', response.data.countPoint, 1);
-                    _this.state.signinRecord.length = 0;
-                    response.data.data.map(function(item) {
-                        _this.state.signinRecord.push(item);
-                    })
-                    _this.commit('initSign');
-                } else {
+        // getIntegral() { //获取当前积分
+        //     let _this = this;
+        //     this.commit('GetCookie', { cvalue: 'id' });
+        //     let params = {
+        //         'memberId': _this.state.cookieVals.id
+        //     }
+        //     let curParams = Qs.stringify(params);
+        //     axios.post('/zzjj-app/memberintegrallog/findTwoIntegralLog.do', curParams).then(response => {
+        //         console.log('可用积分', response);
+        //         if (response.status == 200) {
+        //             _this.state.allIntegral = response.data.countPoint;
+        //             storage.setStorage('allIntegral', response.data.countPoint, 1);
+        //             _this.state.signinRecord.length = 0;
+        //             response.data.data.map(function(item) {
+        //                 _this.state.signinRecord.push(item);
+        //             })
+        //             _this.commit('initSign');
+        //         } else {
 
-                }
-            }).catch(error => {
-                alert("服务器返回数据错误");
-                this.state.isblur = 0;
-            })
-        },
+        //         }
+        //     }).catch(error => {
+        //         alert("服务器返回数据错误");
+        //         this.state.isblur = 0;
+        //     })
+        // },
         initHost() {
             this.commit('GetCookie', { cvalue: 'eqLength' });
             this.commit('GetCookie', { cvalue: 'user_id' });
             this.commit('GetCookie', { cvalue: 'access_token' });
+            this.commit('GetCookie', { cvalue: 'telephone' });
+            console.log(document.cookie)
             axios({
                 method: 'get',
-                url: `/v2/user/${this.state.cookieVals.user_id}/subscribe/devices`,
+                // url: `/v2/user/${this.state.cookieVals.user_id}/subscribe/devices`,
+                url: `/zs-app/v2/user/subscribe/devices`,
                 headers: { 'Access-Token': this.state.cookieVals.access_token }
             }).then(response => {
+                console.log(response.data.length)
                 if (response.data.length == true) {
-                    this.state.macAddress = response.data[0].mac;
+                    // this.state.macAddress = response.data[0].mac;
                     this.state.curOpacity = 1;
                 } else {
                     this.state.curOpacity = .5;
                     this.commit('signInTip', { msg: '您尚未绑定主机', status: 0 });
                     setTimeout(function() {
-                        window.location.href = '/';
+                        // window.location.href = '/';
                     }, 1000)
                 }
             }).catch(error => {
@@ -705,24 +771,28 @@ const store = new Vuex.Store({
         },
         initHouseList() { //获取房屋管理列表
             var _this = this;
-            _this.commit('GetCookie', { cvalue: "id" });
-            let params = {
-                'memberId': _this.state.cookieVals.id
-            }
-            let curParams = Qs.stringify(params);
-            axios.post('/zzjj-app/account/getMemberAllAccount.do', curParams).then(response => {
-                console.log('房屋列表', response);
-                if (response.data.isSuccess == 0) {
-                    _this.state.houseManagerList.length = 0;
-                    response.data.accountList.map((item) => {
-                        _this.state.houseManagerList.push(item)
-                    })
-                } else {
-                    console.log('获取数据失败');
-                }
-            }).catch(error => {
-                alert("服务器返回数据错误");
-            })
+            _this.commit('GetCookie', { cvalue: "telephone" });
+            // console.log(_this.state.cookieVals)
+            // let params = {
+            //     // 'memberId': _this.state.cookieVals.id
+            //     'memberId': _this.state.cookieVals.telephone
+            // }
+            _this.state.houseManagerList.name =  _this.state.cookieVals.telephone;
+            console.log(_this.state.houseManagerList)
+            // let curParams = Qs.stringify(params);
+            // axios.post('/zzjj-app/account/getMemberAllAccount.do', curParams).then(response => {
+            //     console.log('房屋列表', response);
+            //     if (response.data.isSuccess == 0) {
+            //         _this.state.houseManagerList.length = 0;
+            //         response.data.accountList.map((item) => {
+            //             _this.state.houseManagerList.push(item)
+            //         })
+            //     } else {
+            //         console.log('获取数据失败');
+            //     }
+            // }).catch(error => {
+            //     alert("服务器返回数据错误");
+            // })
         },
         getLinkageList() {
             var _this = this;

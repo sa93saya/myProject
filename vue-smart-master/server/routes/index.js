@@ -67,7 +67,7 @@ router.all('/zs-app/login/passwordlogin.do', function(req, res, next) {
     }
     if (result.length ==0 ){
       $sql.end();
-      res.json({sign:'1',msg:'登录失败'})
+      res.json({sign:'1',msg:'用户名或密码错误'})
     }
     else {
       $sql.end();
@@ -75,12 +75,47 @@ router.all('/zs-app/login/passwordlogin.do', function(req, res, next) {
     }
       console.log('-----------------查询----------------');  
       console.log(result);
-      console.log('-----------------结束----------------'); 
-      
-      
-    
-    
+      console.log('-----------------结束----------------');     
 }) 
 });
 
+// 修改密码接口
+router.all('/zs-app/login/updatePassword.do', function(req, res, next) {
+  console.log(req.body);
+  //查询数据
+  var updateSql = 'UPDATE user set password = ? where username = ?';
+  var updateParams = [req.body.password, req.body.phone];
+
+  var $sql = $mysql.createConnection(sql.mysql) 
+  $sql.connect() 
+  $sql.query(updateSql,updateParams,function (err,result) {  
+    if(err){  
+        console.log('error');  
+        $sql.end();
+        res.json({sign:'1',msg:'修改失败'})
+        return;   
+    }
+    if (result.length ==0 ){
+      $sql.end();
+      res.json({sign:'1',msg:'修改失败'})
+    }
+    else {
+      $sql.end();
+      res.json({sign:'0',msg:'密码修改成功'}) 
+    }
+      console.log('-----------------修改----------------');  
+      console.log(result);
+      console.log('-----------------结束----------------');     
+}) 
+});
+//连接网关获取其设备数目和mac地址
+router.all('/zs-app/v2/user/subscribe/devices', function(req, res, next) {
+  console.log(req.cookies)
+  res.json({sign:'0',msg:'成功',length:true}) 
+});
+//连接网关
+router.all('/zs-app/getDevices.do', function(req, res, next) {
+  console.log(req.cookies)
+  res.json({sign:'0',msg:'网关添加成功',length:true}) 
+});
 module.exports = router;

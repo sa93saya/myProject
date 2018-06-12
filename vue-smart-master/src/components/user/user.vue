@@ -83,7 +83,8 @@
 					{ 
 						icon: require('../../assets/user/icon_manage.png'),
 						title: '房屋管理',
-						url: '/choiceHouse'
+						// url: '/choiceHouse'
+						url: '/houseManage/'
 					},
 					// { 
 					// 	icon: require('../../assets/user/icon_gift.png'), 
@@ -103,10 +104,10 @@
 			...mapState(['username', 'eqLen', 'allIntegral', 'familyNum'])
 		},
 		created() {
-			this.initUser();
-			this.initFamily();
-			this.getIntegral();
-		}
+			// this.initUser();
+			// this.initFamily();
+			// this.getIntegral();
+		},
 	}
 </script>
 

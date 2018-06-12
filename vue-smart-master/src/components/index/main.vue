@@ -22,26 +22,26 @@
                         active: require('../../assets/index/active_default.png'),
                         url: '/'
                     },
-                    {
-                        pic: require('../../assets/index/icon_living.png'),
-                        active: require('../../assets/index/active_living.png'),
-                        url: '/home'
-                    },
-                    {
-                        pic: require('../../assets/index/icon_bed.png'),
-                        active: require('../../assets/index/active_bed.png'),
-                        url: '/bed'
-                    },
-                    {
-                        pic: require('../../assets/index/icon_study.png'),
-                        active: require('../../assets/index/active_study.png'),
-                        url: '/study'
-                    },
-                    {
-                        pic: require('../../assets/index/icon_room.png'),
-                        active: require('../../assets/index/active_room.png'),
-                        url: '/management'
-                    },
+                    // {
+                    //     pic: require('../../assets/index/icon_living.png'),
+                    //     active: require('../../assets/index/active_living.png'),
+                    //     url: '/home'
+                    // },
+                    // {
+                    //     pic: require('../../assets/index/icon_bed.png'),
+                    //     active: require('../../assets/index/active_bed.png'),
+                    //     url: '/bed'
+                    // },
+                    // {
+                    //     pic: require('../../assets/index/icon_study.png'),
+                    //     active: require('../../assets/index/active_study.png'),
+                    //     url: '/study'
+                    // },
+                    // {
+                    //     pic: require('../../assets/index/icon_room.png'),
+                    //     active: require('../../assets/index/active_room.png'),
+                    //     url: '/management'
+                    // },
                 ]
 			}
 		}
@@ -66,7 +66,8 @@
     }
     .side-nav li {
         display: block;
-        height: calc(100%/5);
+        /* height: calc(100%/5); */
+        height: calc(100%);
         background-repeat: no-repeat;
         background-size: 1.4rem;
         background-position: center;

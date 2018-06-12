@@ -3,10 +3,10 @@
 		<layer v-if="this.$store.state.isshow" :isStatus="this.$store.state.signInStatusNum" :msg="this.$store.state.signInStatus"></layer>
 		<publicHead :title="msg"></publicHead>
 		<div class="psw">
-			<input type="text" ref="phonenum" placeholder="请输入手机号" />
+			<!-- <input type="text" ref="phonenum" placeholder="请输入手机号" /> -->
 			<div class="flex verification">
-				<input class="code" type="text" ref="codes" placeholder="请输入验证码" />
-				<span class="title" @click="fixCode">获取验证码</span>
+				<!-- <input class="code" type="text" ref="codes" placeholder="请输入验证码" /> -->
+				<!-- <span class="title" @click="fixCode">获取验证码</span> -->
 			</div>
 			<input type="password" ref="password" placeholder="请输入新密码" />
 			<input type="password" ref="confirm" placeholder="请确认新密码" />
@@ -30,13 +30,14 @@
 			layer
 		},
 		methods: {
-			...mapMutations(['submitFix', 'getFixCode']),
+			// ...mapMutations(['submitFix', 'getFixCode']),   number: this.$refs.phonenum.value, codes: this.$refs.codes.value, 
+			...mapMutations(['submitFix']),
 			getfix(){
-				this.submitFix({number: this.$refs.phonenum.value, codes: this.$refs.codes.value, psw: this.$refs.password.value, surePsw: this.$refs.confirm.value});
+				this.submitFix({psw: this.$refs.password.value, surePsw: this.$refs.confirm.value});
 			},
-			fixCode(){
-				this.getFixCode({number: this.$refs.phonenum.value});
-			}
+			// fixCode(){
+			// 	this.getFixCode({number: this.$refs.phonenum.value});
+			// }
 		}
 	}
 </script>

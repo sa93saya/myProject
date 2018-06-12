@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/zs-app': {
-        target: 'http://10.108.218.120:3080',
+        target: 'http://10.108.218.120:3011',
         changeOrigin: true,
         pathRewrite: {
           '^/zs-app': '/zs-app'
@@ -30,7 +30,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: '10.108.218.120', // can be overwritten by process.env.HOST
-    port: 8077, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8086, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

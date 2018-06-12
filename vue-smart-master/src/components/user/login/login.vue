@@ -35,8 +35,6 @@
 				let _this = this;
 				let username = _this.$refs.username.value;
 				let password = _this.$refs.password.value;
-				console.log(username)
-				console.log(password)
 				_this.toLogin({user: username, password: password});
 			}
 		},

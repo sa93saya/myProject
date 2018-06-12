@@ -1,11 +1,11 @@
 <template>
-	<div>
-		<publicHead :title="msg" :rightMenu="rightMenu" :toUrl="create"></publicHead>
+	<div><!--:rightMenu="rightMenu" -->
+		<publicHead :title="msg" :toUrl="create"></publicHead>
 		<ul>
 			<li class="clear manage">
 				<p class="pull-left title">名称</p>
 				<span class="pull-right cur-house-name"><input type="text" :value="curName" /></span>
-				<img class="pull-right arrow-right" :src="iconRight" alt="" />
+				<!-- <img class="pull-right arrow-right" :src="iconRight" alt="" /> -->
 			</li>
 			<li class="clear manage">
 				<input class="uploadfile" id="file_input" @click="filechange" ref="myFiles" type="file" accept="image/jpeg,image/png,image/gif" />
@@ -18,19 +18,20 @@
 		</ul>
 		<div class="btn-group">
 			<button class="btn">保存</button>
-			<button class="btn">删除</button>
+			<button class="btn">返回</button>
 		</div>
 	</div>
 </template>
 
 <script>
 	import publicHead from '../../common/publicHeader'
+	import { mapState, mapMutations, mapGetters } from 'vuex'
 	export default {
 		data() {
 			return {
 				iconRight: require('../../../assets/common/arrow_right.png'),
 				msg: '房屋管理',
-				rightMenu: '创建',
+				// rightMenu: '创建',
 				create: '/create',
 				curHouseSrc: require('../../../assets/index/avatar.png')
 			}
@@ -39,12 +40,14 @@
 			publicHead
 		},
 		computed: {
+			...mapState(['houseManagerList']),
 			curName(){
-				// return this.$store.state.houseManagerList[this.$route.params.name].name;
-				return 'w998'
+				console.log(this.$store.state.houseManagerList)
+				return this.$store.state.houseManagerList.name;
 			}
 		},
 		methods: {
+			...mapMutations(['initHouseList']),
 			/*handkeFileChange() { //图片上传 - 老方法
 				let oFile = this.$refs.myFiles.files;
 				if(!oFile || !oFile[0]){  
@@ -78,6 +81,9 @@
 			    	document.getElementById('pic').src = this.result;
 			    } 
 			}
+		},
+		created(){
+			this.initHouseList();
 		}
 	}
 </script>

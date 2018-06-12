@@ -4,6 +4,7 @@ import router from './router'
 import store from './store/index'
 import axios from 'axios'
 import storage from './utils/storage'
+import echarts from 'echarts'
 
 
 Vue.config.productionTip = false
@@ -33,4 +34,5 @@ router.afterEach((to,from,next) => {
 });
 Vue.prototype.$axios = axios;
 Vue.prototype.$storage = storage;
+Vue.prototype.$echarts = echarts
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';

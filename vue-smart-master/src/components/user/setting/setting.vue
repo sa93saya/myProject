@@ -7,7 +7,7 @@
 				<img class="pull-right" :src="iconRight" alt="" />
 			</li>
 		</ul>
-		<div class="sign-toggle" @click="signOut">退出登入</div>
+		<div class="sign-toggle" @click="signOut">退出登录</div>
 	</div>
 </template>
 
@@ -20,14 +20,14 @@
 				iconRight: require('../../../assets/common/arrow_right.png'),
 				msg: '设置',
 				securityList: [
-					{
-						title: '关于我们',
-						url: '/about'
-					},
-					{
-						title: '意见反馈',
-						url: '/opinion'
-					},
+					// {
+					// 	title: '关于我们',
+					// 	url: '/about'
+					// },
+					// {
+					// 	title: '意见反馈',
+					// 	url: '/opinion'
+					// },
 					{
 						title: '修改密码',
 						url: '/password/1'

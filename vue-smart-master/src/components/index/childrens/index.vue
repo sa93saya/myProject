@@ -1,18 +1,22 @@
 <template>
 	<div class="equipment">
-        <div v-if="user" class="add" @click="addUrl">
+        <div class="add" @click="addUrl" v-if="!this.$store.state.data">
             <span class="add-symbol">+</span><span class="add-tip">点击添加网关</span>
         </div>
-        <div v-if="!user" class="equipment-list">
+        <div v-if="this.$store.state.data" class="equipment-list">
             <div class="pull-left single" v-for="(item,index) in eqUl">
                 <div class="area" :data-cur="index">
                     <router-link :to="{ path: '/sersor', query: { cur: index }}" :style="'backgroundImage:url('+ more +')'"></router-link>
-                    <!-- <img :src="item.online == 0 ? item.offSrc : item.onSrc" alt=""> -->
+                    <img :src="item.online == 0 ? item.offSrc : item.onSrc" alt="">
+                    <!-- <img src="../../../assets/index/socket_pre.png" alt=""> -->
                     <p class="equipment-name">{{ item.name }}</p>
                     <p class="status">{{ item.des }}</p>
                 </div>
             </div>
-        </div>
+        </div> 
+        <!-- <div v-if="!user" class="add">
+                <router-link to="/login"><span class="add-tip">请先点击<u>登录</u></span></router-link>
+        </div>-->
     </div>
 </template>
 
@@ -21,36 +25,38 @@
 	export default {
 		data(){
 			return {
-                eqUl:[{name:'温度传感器',des:'444'},{name:'湿度传感器',des:'9011'},{name:'智能电表',des:'9011'}],
-				more: require('../../../assets/common/more.png')
+                eqUl:[{name:'温度传感器',des:'444',onSrc:'../../../assets/index/socket_pre.png',online:1},
+                {name:'湿度传感器',des:'9011',offSrc:'../assets/index/Temperature_humidity_nor.png',online:0},
+                {name:'智能电表',des:'9011',onSrc:'../../../assets/index/socket_pre.png',online:1}],
+                more: require('../../../assets/common/more.png'),
 			}
 		},
         computed: {
             // ...mapState(['user','eqUl', 'nodata'])
-            ...mapState(['user', 'nodata'])
+            ...mapState(['user', 'nodata','data'])
         },
 		methods: {
-            ...mapMutations(['isLogin', 'getToken', 'getListen', 'getSend', 'getSdkEqMsg']),
+            ...mapMutations(['isLogin', 'getToken', 'getListen', 'getSend', 'getSdkEqMsg','isgetDevices']),
             addUrl(){
-                // if(!this.$store.state.user) {
-                //     this.$router.push('/login');
-                //     return;
-                // }
+                if(!this.$store.state.user) {
+                    this.$router.push('/login');
+                    return;
+                }
                 this.$router.push('/add');
             }
         },
         created(){
             this.isLogin();
+            this.isgetDevices();
             if(82437){
-                if(!this.$store.socketObj){
-                    this.getToken();
-                }else{
-                    this.getListen();
-                    this.getSend(); 
-                    this.getSdkEqMsg();
-                }
-            }else{
-                $("#no_login_shadow").css("display","block");
+                // if(!this.$store.socketObj){
+                //     this.getToken();
+                // }else{
+                //     this.getListen();
+                //     this.getSend(); 
+                //     this.getSdkEqMsg();
+                // }
+                // $("#no_login_shadow").css("display","block");
             }
         }
 	}

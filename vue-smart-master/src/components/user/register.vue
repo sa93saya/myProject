@@ -30,6 +30,11 @@
 				<input type="password" ref="confirm" placeholder="确认密码" autocomplete="off" />
 			</div>
 			<button type="button" class="btn-login" @click="register">提交注册</button>
+			<div class="clear more-menu">
+				<div class="pull-center">
+			<router-link to="/login">登录</router-link>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -150,4 +155,14 @@
 	input:-ms-input-placeholder, textarea:-ms-input-placeholder { 
 		color: #fff!important; 
 	} 
+
+	.more-menu {
+		font-size: .9rem;
+		color: #fff;
+		margin-top: 1.8rem;
+		padding: 0 .8rem;
+	}
+	.more-menu a {
+		color: #fff;
+	}
 </style>
